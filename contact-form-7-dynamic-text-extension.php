@@ -140,7 +140,7 @@ function wpcf7_dynamictext_shortcode_handler( $tag ) {
     
     if(!in_array('noInputBox', $options))
 	$html = '<input type="text" name="' . $name . '" value="' . esc_attr( $value ) . '"' . $atts . ' '. $readonly.' />';
-        else $html = '<p name="' . $name . '"' . $atts . '>' . esc_attr( $value ) . '</p>';
+        else $html = '<span name="' . $name . '"' . $atts . '>' . esc_attr( $value ) . '</span>';
 
 	$validation_error = '';
 	if ( is_a( $wpcf7_contact_form, 'WPCF7_ContactForm' ) )
