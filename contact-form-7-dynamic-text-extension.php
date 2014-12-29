@@ -63,11 +63,15 @@ function wpcf7_dynamictext_shortcode_handler( $tag ) {
 
 	$type = $tag['type'];
 	$name = $tag['name'];
+    $noInputBox = $tag['noInputBox'];
 	$options = (array) $tag['options'];
 	$values = (array) $tag['values'];
 
 	if ( empty( $name ) )
 		return '';
+    
+    if ( empty( $noInputBox ) )
+        $noInputBox = true;
 
 	$atts = '';
 	$id_att = '';
@@ -133,14 +137,18 @@ function wpcf7_dynamictext_shortcode_handler( $tag ) {
 	if(in_array('uneditable', $options)){
 		$readonly = 'readonly="readonly"';
 	}
-
+    
+    if(!in_array('noInputBox', $options))
 	$html = '<input type="text" name="' . $name . '" value="' . esc_attr( $value ) . '"' . $atts . ' '. $readonly.' />';
+        else $html = '<p name="' . $name . '"' . $atts . '>' . esc_attr( $value ) . '</p>';
 
 	$validation_error = '';
 	if ( is_a( $wpcf7_contact_form, 'WPCF7_ContactForm' ) )
 		$validation_error = $wpcf7_contact_form->validation_error( $name );
-
+    
+    
 	$html = '<span class="wpcf7-form-control-wrap ' . $name . '">' . $html . $validation_error . '</span>';
+
 
 	return $html;
 }
@@ -186,7 +194,10 @@ function wpcf7_tg_pane_dynamictext( $type = 'dynamictext' ) {
 <div id="wpcf7-tg-pane-<?php echo $type; ?>" class="hidden">
 <form action="">
 <table>
-<tr><td><input type="checkbox" name="required" />&nbsp;<?php echo esc_html( __( 'Required field?', 'wpcf7' ) ); ?></td></tr>
+<tr>
+    <td><input type="checkbox" name="required" />&nbsp;<?php echo esc_html( __( 'Required field?', 'wpcf7' ) ); ?></td>
+    <td><input type="checkbox" name="noInputBox" class="option" />&nbsp;<?php echo esc_html( __( "Don't put value in input box?", 'wpcf7' ) ); ?><br /></td>
+</tr>
 <tr><td><?php echo esc_html( __( 'Name', 'wpcf7' ) ); ?><br /><input type="text" name="name" class="tg-name oneline" /></td><td></td></tr>
 </table>
 
@@ -211,6 +222,7 @@ function wpcf7_tg_pane_dynamictext( $type = 'dynamictext' ) {
 <td>
 <input type="checkbox" name="uneditable" class="option" />&nbsp;<?php echo esc_html( __( "Make this field Uneditable", 'wpcf7' ) ); ?><br />
 </td>
+
 
 <td><?php echo esc_html( __( 'Dynamic value', 'wpcf7' ) ); ?> (<?php echo esc_html( __( 'optional', 'wpcf7' ) ); ?>)<br /><input type="text" name="values" class="oneline" />
 <?php echo esc_html( __( 'You can enter any short code.  Just leave out the square brackets ([]) and only use single quotes (\' not ")', 'wpcf7' )); ?>
