@@ -64,6 +64,8 @@ function wpcf7_dynamictext_shortcode_handler( $tag ) {
 	$type = $tag['type'];
 	$name = $tag['name'];
     $noInputBox = $tag['noInputBox'];
+    $noHTML = $tag['noHTML'];
+
 	$options = (array) $tag['options'];
 	$values = (array) $tag['values'];
 
@@ -72,6 +74,9 @@ function wpcf7_dynamictext_shortcode_handler( $tag ) {
     
     if ( empty( $noInputBox ) )
         $noInputBox = true;
+
+    if ( empty( $noHTML ) )
+        $noHTML = false;
 
 	$atts = '';
 	$id_att = '';
@@ -142,6 +147,8 @@ function wpcf7_dynamictext_shortcode_handler( $tag ) {
 	$html = '<input type="text" name="' . $name . '" value="' . esc_attr( $value ) . '"' . $atts . ' '. $readonly.' />';
         else $html = '<span name="' . $name . '"' . $atts . '>' . esc_attr( $value ) . '</span>';
 
+
+
 	$validation_error = '';
 	if ( is_a( $wpcf7_contact_form, 'WPCF7_ContactForm' ) )
 		$validation_error = $wpcf7_contact_form->validation_error( $name );
@@ -149,6 +156,8 @@ function wpcf7_dynamictext_shortcode_handler( $tag ) {
     
 	$html = '<span class="wpcf7-form-control-wrap ' . $name . '">' . $html . $validation_error . '</span>';
 
+    if(in_array('noHTML', $options))
+        $html = esc_attr( $value );
 
 	return $html;
 }
@@ -197,6 +206,7 @@ function wpcf7_tg_pane_dynamictext( $type = 'dynamictext' ) {
 <tr>
     <td><input type="checkbox" name="required" />&nbsp;<?php echo esc_html( __( 'Required field?', 'wpcf7' ) ); ?></td>
     <td><input type="checkbox" name="noInputBox" class="option" />&nbsp;<?php echo esc_html( __( "Don't put value in input box?", 'wpcf7' ) ); ?><br /></td>
+    <td><input type="checkbox" name="noHTML" class="option" />&nbsp;<?php echo esc_html( __( "plain text, no markup", 'wpcf7' ) ); ?><br /></td>
 </tr>
 <tr><td><?php echo esc_html( __( 'Name', 'wpcf7' ) ); ?><br /><input type="text" name="name" class="tg-name oneline" /></td><td></td></tr>
 </table>
